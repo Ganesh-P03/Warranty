@@ -6,10 +6,13 @@ export default async function createProduct(req, res) {
     console.log("CONNECTING TO MONGO");
     await connectMongo();
     console.log("CONNECTED TO MONGO");
+    console.log(req.body);
     const curDocId = req.body.docId;
     console.log(curDocId);
 
-    const txn = await ClaimWarranty.findOneAndDelete({ _id: curDocId });
+    const txn = await ClaimWarranty.findOneAndDelete({
+      _id: curDocId,
+    });
     console.log("FOUND AND DELETED DOCUMENT");
     console.log(txn);
     res.json({ txn });

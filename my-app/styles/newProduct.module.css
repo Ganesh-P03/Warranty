@@ -1,33 +1,34 @@
 .login {
+  height: 220vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+
   background-size: cover;
-  background-color: #000;
+  background: linear-gradient(267.45deg, #05d5ff -34.23%, #53f 99.39%);
 }
 
 .loginTitle {
-  font-size: 50px;
-  color: #faeded;
-  font-family: Helvetica, sans-serif;
+  font-size: 70px;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  color: white;
 }
 
 .label {
-  color: #faeded;
+  color: white;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .textarea {
-  background-color: #faeded;
+  background-color: white;
   font-size: 19px;
 }
 
 .loginImg {
   width: 300px;
   height: 200px;
-  border: 2px solid #faeded;
-  /* position: absolute;
-  left: 20px; */
+  border: 2px solid white;
+  border-radius: 10px;
 }
 
 .loginForm {
@@ -42,7 +43,7 @@
 
 .loginInput {
   padding: 10px;
-  background-color: #faeded;
+  background-color: white;
   border: 1px solid;
   border-radius: 10px;
   font-size: 15px;
@@ -50,11 +51,11 @@
 
 .loginButton {
   margin-top: 20px;
-  background-color: #faeded;
+  background: white;
   cursor: pointer;
   border: none;
   border-radius: 10px;
-  color: #000;
+  color: blue;
   padding: 10px;
   font-size: large;
 }

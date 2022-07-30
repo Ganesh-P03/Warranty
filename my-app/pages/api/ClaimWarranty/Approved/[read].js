@@ -1,16 +1,16 @@
-import connectMongo from "../../../utils/connectMongo";
-import ClaimWarranty from "../../../models/ClaimWarranty";
+import connectMongo from "../../../../utils/connectMongo";
+import ClaimWarranty from "../../../../models/ClaimWarranty";
 
 export default async function createProduct(req, res) {
-  const curRepairId = req.query.read;
+  const curTokenId = req.query.read;
   try {
     console.log("CONNECTING TO MONGO");
     await connectMongo();
     console.log("CONNECTED TO MONGO");
 
     const txn = await ClaimWarranty.find({
-      repairId: curRepairId,
-      status: "pending",
+      tokenId: curTokenId,
+      status: "approved",
     });
     console.log("FOUND DOCUMENT");
     console.log(txn);

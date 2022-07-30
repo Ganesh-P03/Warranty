@@ -6,6 +6,7 @@ const claimwarrantySchema = new mongoose.Schema({
   tokenId: { type: String, required: true },
   msg: { type: String },
   from: { type: String },
+  status: { type: String, default: "pending" },
 });
 
 const ClaimWarranty =

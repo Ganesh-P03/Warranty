@@ -32,9 +32,17 @@ contract Warranty is ERC721Enumerable,Ownable{
     }
     
     function _baseURI() internal view override returns (string memory) {
-        require(retailer.whitelistedAddresses(msg.sender), "You are not retailer or owner");
+        
         return _baseTokenURI;
     }
+
+  
+
+    function baseTokenURI() public view returns (string memory) {
+     return _baseTokenURI;
+    }
+
+    
 
     function setPaused(bool val) public onlyOwner{
         _paused=val;
@@ -69,6 +77,7 @@ contract Warranty is ERC721Enumerable,Ownable{
 
       function request(address _repairer,uint256 tokenId,string memory  _request) public {
          require(ownerOf(tokenId)==msg.sender,"You cant send a request");
+         require(isRepairer[_repairer],"You can't send a request to this address");
          emit _req(msg.sender,_repairer,tokenId,_request);
       }
 

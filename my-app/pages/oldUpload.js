@@ -5,13 +5,17 @@ import { Contract, providers, utils, BigNumber } from "ethers";
 import Web3Modal from "web3modal";
 import { NFT_CONTRACT_ADDRESS, NFT_CONTRACT_ABI } from "../constants/index";
 import styles from "./../styles/oldProduct.module.css";
+import NavBar from "../components/NavBar";
 
 const OldUpload = () => {
   const [sNums, setsNums] = useState("");
   const [pId, setpId] = useState("");
+
+  const [product, setProduct] = useState(null);
   const [walletConnected, setWalletConnected] = useState(false);
   const web3ModalRef = useRef();
   const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState(false);
 
   const connectWallet = async () => {
     try {
@@ -62,11 +66,6 @@ const OldUpload = () => {
   const handleUpload = async () => {
     try {
       setLoading(true);
-      await axios.put(`/api/Product/${pId}`, {
-        sNums: sNums,
-      });
-
-      console.log("added to DB");
 
       console.log("minting nfts");
       let parsedsNums = sNums.split(",");
@@ -96,12 +95,50 @@ const OldUpload = () => {
       );
 
       // setLoading(true);
+      await axios.put(`/api/Product/${pId}`, {
+        sNums: sNums,
+      });
 
-      setLoading(false);
+      console.log("added to DB");
       window.alert(`You successfully minted ${size} nfts 🔥`);
+      setLoading(false);
     } catch (err) {
       setLoading(false);
       console.log("error occured");
+    }
+  };
+
+  const handleInfo = async () => {
+    let Product = await axios.get(`http://localhost:3000/api/Detection/${pId}`);
+    console.log(Product.data);
+    setProduct(Product.data);
+    setStatus(true);
+  };
+
+  const renderInfo = () => {
+    console.log(status);
+    if (status) {
+      return (
+        <>
+          <div className={styles.text}>
+            <h1 className={styles.loginhone}>{product.name}</h1>
+          </div>
+          <div className={styles.container}>
+            <div className={styles.left}>
+              <div className={styles.centered}>
+                <img src={product.url} height="200px" width="100px"></img>
+              </div>
+            </div>
+            <div className={styles.right}>
+              <div className={styles.centered}>
+                <h2>Product Id : {pId}</h2>
+                <h2> Product Description:</h2>
+                <p>{product.description}</p>
+              </div>
+            </div>
+          </div>
+        </>
+      );
     }
   };
 
@@ -122,6 +159,10 @@ const OldUpload = () => {
                 setpId(e.target.value);
               }}
             />
+            <button className={styles.loginButton} onClick={handleInfo}>
+              Get Information
+            </button>
+            {renderInfo()}
             <label className={styles.label}>Serial Numbers</label>
             <textarea
               cols="30"
@@ -141,7 +182,13 @@ const OldUpload = () => {
     }
   };
 
-  return <>{renderBody()}</>;
+  return (
+    <>
+      <NavBar />
+
+      {renderBody()}
+    </>
+  );
 };
 
 export default OldUpload;

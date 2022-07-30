@@ -6,6 +6,7 @@ import { Contract, providers, utils, BigNumber } from "ethers";
 import Web3Modal from "web3modal";
 import { NFT_CONTRACT_ADDRESS, NFT_CONTRACT_ABI } from "../constants/index";
 import styles from "./../styles/newProduct.module.css";
+import NavBar from "../components/NavBar";
 //import Image from "next/image";
 
 const NewUpload = () => {
@@ -18,8 +19,6 @@ const NewUpload = () => {
   const [url, setUrl] = useState(null);
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  //const [warrantyTime, setWarrantyTime] = useState(null);
   const [warrantyTimeMonths, setWarrantyTimeMonths] = useState(0);
   const [warrantyTimeDays, setWarrantyTimeDays] = useState(0);
   const [warrantyTimeSeconds, setWarrantyTimeSeconds] = useState(0);
@@ -90,9 +89,7 @@ const NewUpload = () => {
     console.log(newProduct);
 
     try {
-      //setLoading(true);
-      await axios.post(`/api/Product/create`, newProduct);
-      console.log("added to DB");
+      setLoading(true);
 
       console.log("minting nfts");
       let parsedsNums = serialNumbers.split(",");
@@ -123,8 +120,12 @@ const NewUpload = () => {
           console.log("added tx to db");
         })
       );
-      setLoading(false);
+
+      await axios.post(`/api/Product/create`, newProduct);
+      console.log("added to DB");
+
       window.alert(`You successfully minted ${size} nfts 🔥`);
+      setLoading(false);
     } catch (error) {
       setLoading(false);
       console.log("error occured");
@@ -171,163 +172,166 @@ const NewUpload = () => {
       return <div>Please Wait while we are processing...⏳</div>;
     } else {
       return (
-        <div className={styles.login}>
-          <span className={styles.loginTitle}>Add new Product 🚀</span>
-          <div className={styles.loginForm} style={{ marginBottom: "40px" }}>
-            <div>
-              <label for="myfile" style={{ color: "white" }}>
-                Select a image:
-              </label>
+        <>
+          <NavBar />
+          <div className={styles.login}>
+            <span className={styles.loginTitle}>Add new Product </span>
+            <div className={styles.loginForm} style={{ marginBottom: "40px" }}>
+              <div>
+                <label for="myfile" style={{ color: "white" }}>
+                  Select a image:
+                </label>
+                <input
+                  type="file"
+                  id="myfile"
+                  name="myfile"
+                  className={styles.choose}
+                  style={{ color: "white", marginLeft: "20px" }}
+                  onChange={handleChangeInputFile}
+                />
+              </div>
+              <label className={styles.label}>Image</label>
+              {/* <Image src={url} alt={url} className={styles.loginImg} /> */}
+              {renderImg()}
+
+              <label className={styles.label}>Product Name</label>
               <input
-                type="file"
-                id="myfile"
-                name="myfile"
-                className={styles.choose}
-                style={{ color: "white", marginLeft: "20px" }}
-                onChange={handleChangeInputFile}
+                className={styles.loginInput}
+                type="text"
+                placeholder="Enter Product Name"
+                onChange={(e) => {
+                  setproductName(e.target.value);
+                }}
               />
+              <label className={styles.label}>Product Id</label>
+              <input
+                className={styles.loginInput}
+                type="text"
+                placeholder="Enter Product Id"
+                onChange={(e) => {
+                  setproductId(e.target.value);
+                }}
+              />
+              <label className={styles.label}>Product Description</label>
+              <input
+                type="text"
+                className={styles.loginInput}
+                placeholder="Enter Product Description"
+                onChange={(e) => {
+                  setproductDesc(e.target.value);
+                }}
+              />
+              <label className={styles.label}>Product Attributes</label>
+              <input
+                type="text"
+                className={styles.loginInput}
+                placeholder="Enter Product Attributes"
+                onChange={(e) => {
+                  setproductAttr(e.target.value);
+                }}
+              />
+              <label className={styles.label}>Warranty Time</label>
+              <div style={{ display: "grid", paddingLeft: "20px" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignContent: "center",
+                  }}
+                >
+                  <label
+                    style={{
+                      color: "white",
+                      marginRight: "10px",
+                      alignSelf: "center",
+                    }}
+                  >
+                    Months :
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Warranty time in months"
+                    className={styles.loginInput}
+                    onChange={(e) => {
+                      setWarrantyTimeMonths(e.target.value);
+                    }}
+                  />
+                </div>
+                <br />
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignContent: "center",
+                  }}
+                >
+                  <label
+                    style={{
+                      color: "white",
+                      marginRight: "30px",
+                      alignSelf: "center",
+                    }}
+                  >
+                    Days :
+                  </label>
+                  <input
+                    type="text"
+                    className={styles.loginInput}
+                    placeholder="Warranty time in Days"
+                    onChange={(e) => {
+                      setWarrantyTimeDays(e.target.value);
+                    }}
+                  />
+                </div>
+                <br />
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignContent: "center",
+                  }}
+                >
+                  <label
+                    style={{
+                      color: "white",
+                      marginRight: "10px",
+                      alignSelf: "center",
+                    }}
+                  >
+                    Seconds :
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Warranty time in seconds"
+                    className={styles.loginInput}
+                    onChange={(e) => {
+                      setWarrantyTimeSeconds(e.target.value);
+                    }}
+                  />
+                </div>
+              </div>
+
+              <label className={styles.label}>Serial Numbers </label>
+
+              <textarea
+                className={styles.textarea}
+                placeholder="You can enter multiple serial numbers seperated by comma ,"
+                cols="10"
+                rows="20"
+                onChange={(e) => {
+                  setserialNumbers(e.target.value);
+                }}
+              ></textarea>
+              <button
+                className={styles.loginButton}
+                type="submit"
+                onClick={handleSubmit}
+              >
+                Add
+              </button>
             </div>
-            <label className={styles.label}>Image</label>
-            {/* <Image src={url} alt={url} className={styles.loginImg} /> */}
-            {renderImg()}
-
-            <label className={styles.label}>Product Name</label>
-            <input
-              className={styles.loginInput}
-              type="text"
-              placeholder="Enter Product Name"
-              onChange={(e) => {
-                setproductName(e.target.value);
-              }}
-            />
-            <label className={styles.label}>Product Id</label>
-            <input
-              className={styles.loginInput}
-              type="text"
-              placeholder="Enter Product Id"
-              onChange={(e) => {
-                setproductId(e.target.value);
-              }}
-            />
-            <label className={styles.label}>Product Description</label>
-            <input
-              type="text"
-              className={styles.loginInput}
-              placeholder="Enter Product Description"
-              onChange={(e) => {
-                setproductDesc(e.target.value);
-              }}
-            />
-            <label className={styles.label}>Product Attributes</label>
-            <input
-              type="text"
-              className={styles.loginInput}
-              placeholder="Enter Product Attributes"
-              onChange={(e) => {
-                setproductAttr(e.target.value);
-              }}
-            />
-            <label className={styles.label}>Warranty Time</label>
-            <div style={{ display: "grid", paddingLeft: "20px" }}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignContent: "center",
-                }}
-              >
-                <label
-                  style={{
-                    color: "white",
-                    marginRight: "10px",
-                    alignSelf: "center",
-                  }}
-                >
-                  Months :
-                </label>
-                <input
-                  type="text"
-                  placeholder="Warranty time in months"
-                  className={styles.loginInput}
-                  onChange={(e) => {
-                    setWarrantyTimeMonths(e.target.value);
-                  }}
-                />
-              </div>
-              <br />
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignContent: "center",
-                }}
-              >
-                <label
-                  style={{
-                    color: "white",
-                    marginRight: "30px",
-                    alignSelf: "center",
-                  }}
-                >
-                  Days :
-                </label>
-                <input
-                  type="text"
-                  className={styles.loginInput}
-                  placeholder="Warranty time in Days"
-                  onChange={(e) => {
-                    setWarrantyTimeDays(e.target.value);
-                  }}
-                />
-              </div>
-              <br />
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignContent: "center",
-                }}
-              >
-                <label
-                  style={{
-                    color: "white",
-                    marginRight: "10px",
-                    alignSelf: "center",
-                  }}
-                >
-                  Seconds :
-                </label>
-                <input
-                  type="text"
-                  placeholder="Warranty time in seconds"
-                  className={styles.loginInput}
-                  onChange={(e) => {
-                    setWarrantyTimeSeconds(e.target.value);
-                  }}
-                />
-              </div>
-            </div>
-
-            <label className={styles.label}>Serial Numbers </label>
-
-            <textarea
-              className={styles.textarea}
-              placeholder="You can enter multiple serial numbers seperated by comma ,"
-              cols="10"
-              rows="20"
-              onChange={(e) => {
-                setserialNumbers(e.target.value);
-              }}
-            ></textarea>
-            <button
-              className={styles.loginButton}
-              type="submit"
-              onClick={handleSubmit}
-            >
-              Add
-            </button>
           </div>
-        </div>
+        </>
       );
     }
   };

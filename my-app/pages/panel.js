@@ -8,13 +8,13 @@ import {
   transactionProvider,
   getLogs,
 } from "ethers";
-//import main from "../testing/scripts";
 import Web3Modal from "web3modal";
 import axios from "axios";
 import { NFT_CONTRACT_ADDRESS, NFT_CONTRACT_ABI } from "../constants/index";
 var Web3 = require("web3");
 import styles from "./../styles/panel.module.css";
 import { StyleSheetManager } from "styled-components";
+import NavBar from "../components/NavBar";
 const ethers = require("ethers");
 const contractabi = require("../constants/cabi.json");
 
@@ -26,11 +26,11 @@ const Panel = () => {
   const [status, setStatus] = useState(false);
   const [walletConnected, setWalletConnected] = useState(false);
   const [product, setProduct] = useState(null);
+  const [reqMessage, setreqMessage] = useState(null);
+  const [repairAddress, setrepairAddress] = useState(null);
   const [txnHashes, setTxnHashes] = useState(null);
   const [txnFrom, setTxnFrom] = useState(null);
   const [txnTo, setTxnTo] = useState(null);
-
-  //var web3 = new Web3(Web3.givenProvider || "ws://localhost:8546");
   const onPageLoad = async () => {
     await connectWallet();
     //main();
@@ -44,32 +44,32 @@ const Panel = () => {
       console.log(error);
     }
   };
-  // async function main() {
-  //   const contractAddress = "0x1D22cb77DAAB545e2a7c652Dd85a695d38CEff52";
-  //   console.log(
-  //     "wss://polygon-mumbai.g.alchemy.com/v2/zurJTrfSEQoqjKepEzLZvqqDUT87wIg_"
-  //   );
-  //   const provider = new ethers.providers.WebSocketProvider(
-  //     "wss://polygon-mumbai.g.alchemy.com/v2/zurJTrfSEQoqjKepEzLZvqqDUT87wIg_"
-  //   );
-  //   const contract = new ethers.Contract(
-  //     contractAddress,
-  //     contractabi,
-  //     provider
-  //   );
-  //   console.log("before");
-  //   contract.on("_req", (from, to, msg, event) => {
-  //     let info = {
-  //       from: from,
-  //       repairId: to,
-  //       tokenId: tokenId,
-  //       msg: event,
-  //     };
-  //     //console.log(info);
-  //     console.log(JSON.stringify(info, null, 4));
-  //   });
-  //   console.log("hello");
-  // }
+  async function requestListener() {
+    const contractAddress = "0x242Bfe278bdE88881d5A8feaB20Ea62F31b535c4";
+    console.log(
+      "wss://polygon-mumbai.g.alchemy.com/v2/zurJTrfSEQoqjKepEzLZvqqDUT87wIg_"
+    );
+    const provider = new ethers.providers.WebSocketProvider(
+      "wss://polygon-mumbai.g.alchemy.com/v2/zurJTrfSEQoqjKepEzLZvqqDUT87wIg_"
+    );
+    const contract = new ethers.Contract(
+      contractAddress,
+      contractabi,
+      provider
+    );
+    contract.on("_req", async (from, to, tokenId, event) => {
+      let info = {
+        from: from,
+        repairId: to,
+        tokenId: ethers.BigNumber.from(tokenId).toString(),
+        msg: event,
+      };
+      console.log(JSON.stringify(info, null, 4));
+      await axios.post(`http://localhost:3000/api/ClaimWarranty/create`, info);
+      console.log("added to DB");
+    });
+    console.log("hello");
+  }
 
   useEffect(() => {
     if (!walletConnected) {
@@ -198,13 +198,6 @@ const Panel = () => {
     console.log(status);
     console.log(product);
     console.log(txnHis);
-    //txnHis.transactionHashes[0]
-    // let cTxn = await web3.eth.getTransactionReceipt(
-    //   "0x34aaf417c079ef91d52961c0e20fde34ff9481e84806159bb9b1506fcc232ec6"
-    // );
-    // console.log(cTxn);
-    // console.log(cTxn.from);
-    // console.log(cTxn.to);
   };
 
   const renderEachTransaction = (transactionHash, i) => {
@@ -220,9 +213,18 @@ const Panel = () => {
   const renderBody = () => {
     if (status)
       return (
-        <>
-          <div className={styles.text}>
-            <h1 className={styles.loginhone}>{product.name}</h1>
+        <div
+          style={{
+            marginTop: "80px",
+            backgroundColor: "white",
+            borderRadius: "20px",
+            marginLeft: "100px",
+            marginRight: "100px",
+            color: "black",
+          }}
+        >
+          <div>
+            <h1 style={{ textAlign: "center" }}>{product.name}</h1>
           </div>
           <div className={styles.container}>
             <div className={styles.left}>
@@ -232,7 +234,7 @@ const Panel = () => {
               </div>
             </div>
             <div className={styles.right}>
-              <div className={styles.centered}>
+              <div className={styles.centered} style={{ color: "black" }}>
                 <h2>Product Id : {product.productId}</h2>
                 <h2>Serial No: {product.sNo}</h2>
                 <h2> Product Description:</h2>
@@ -249,7 +251,7 @@ const Panel = () => {
             </tr>
             {txnHashes.map(renderEachTransaction)}
           </table>
-        </>
+        </div>
       );
   };
 
@@ -285,59 +287,101 @@ const Panel = () => {
         NFT_CONTRACT_ABI,
         signer
       );
+      // const address = signer.getAddress();
       console.log("tx request sending..");
+      console.log(repairAddress);
+      console.log(reqMessage);
+
       const tx = await nftContract.request(
-        utils.getAddress("0x8eF9e153F9B254BAeDc4eD71e18E770eF2b07C64"),
+        utils.getAddress(repairAddress),
         BigNumber.from(tokenId),
-        "hello"
+        reqMessage
       );
+      requestListener();
       await tx.wait();
-      //await main();
-      console.log(tx);
     } catch (err) {
       console.error(err);
     }
   };
   return (
-    <div className={styles.login}>
-      <div className={styles.loginForm}>
-        <label className={styles.loginhhtwo}>Token Id please</label>
-        <input
-          className={styles.loginInput}
-          type="text"
-          onChange={(e) => {
-            setTokenId(e.target.value);
-          }}
-        />
-        <button className={styles.loginButton} onClick={handleSubmit}>
-          Submit
-        </button>
-        {renderBody()}
-        <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
-        <div className={styles.loginForm}>
-          <label className={styles.loginhhtwo}>Address to deliver</label>
-          <input
-            className={styles.loginInput}
-            type="text"
-            onChange={(e) => {
-              to.current = e.target.value;
+    <>
+      <NavBar />
+      <div>
+        <div>
+          <div style={{ width: "400px", margin: "20px auto" }}>
+            <div style={{ display: "grid" }}>
+              <div className={styles.loginhhtwo}>Token Id Please</div>
+              <input
+                className={styles.loginInput}
+                type="text"
+                onChange={(e) => {
+                  setTokenId(e.target.value);
+                }}
+              />
+              <button className={styles.loginButton} onClick={handleSubmit}>
+                Submit
+              </button>
+            </div>
+          </div>
+          {renderBody()}
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-evenly",
+              marginTop: "100px",
+              marginBottom: "50px",
+              height: "100%",
             }}
-          />
-          <button className={styles.loginButton} onClick={handleTransfer}>
-            Transfer
-          </button>
-          <button
-            className={styles.loginButton}
-            onClick={handleTransferWithWarranty}
           >
-            Transfer with warranty enabled
-          </button>
-          <button className={styles.loginButton} onClick={handleRequest}>
-            Request
-          </button>
+            <div style={{ display: "grid" }}>
+              <div className={styles.loginhhtwo}>Address to deliver</div>
+              <input
+                className={styles.loginInput}
+                placeholder="address to deliver"
+                type="text"
+                onChange={(e) => {
+                  to.current = e.target.value;
+                }}
+              />
+              <button className={styles.loginButton} onClick={handleTransfer}>
+                Transfer
+              </button>
+              <button
+                className={styles.loginButton}
+                onClick={handleTransferWithWarranty}
+              >
+                Transfer with warranty enabled
+              </button>
+            </div>
+
+            <div style={{ display: "grid" }}>
+              <label className={styles.loginhhtwo}>Claim Warranty</label>
+              <input
+                type="text"
+                placeholder="Message"
+                className={styles.loginInput}
+                onChange={(e) => {
+                  setreqMessage(e.target.value);
+                }}
+              />
+              <input
+                type="text"
+                placeholder="Repairer address"
+                className={styles.loginInput}
+                style={{ marginTop: "20px" }}
+                onChange={(e) => {
+                  setrepairAddress(e.target.value);
+                }}
+              />
+              <button className={styles.loginButton} onClick={handleRequest}>
+                Request
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

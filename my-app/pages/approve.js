@@ -3,6 +3,7 @@ import {
   Contract,
   providers,
   utils,
+  ethers,
   BigNumber,
   getAddress,
   transactionProvider,
@@ -15,6 +16,8 @@ import { NFT_CONTRACT_ADDRESS, NFT_CONTRACT_ABI } from "../constants/index";
 var Web3 = require("web3");
 import styles from "./../styles/panel.module.css";
 import { StyleSheetManager } from "styled-components";
+const contractabi = require("../constants/cabi.json");
+import NavBar from "../components/NavBar";
 
 const Approve = () => {
   const [walletConnected, setWalletConnected] = useState(false);
@@ -66,9 +69,7 @@ const Approve = () => {
     try {
       const signer = await getProviderOrSigner(true);
       const address = await signer.getAddress();
-      const approvals = await axios.get(
-        `/api/ClaimWarranty/0x8eF9e153F9B254BAeDc4eD71e18E770eF2b07C64`
-      );
+      const approvals = await axios.get(`/api/ClaimWarranty/${address}`);
 
       setApproveArray(approvals.data.txn);
 
@@ -84,34 +85,111 @@ const Approve = () => {
     }
   };
 
-  //   const onApprove=async()=>{
-  //     try {
-  //       const signer = await getProviderOrSigner(true);
-  //       const nftContract = new Contract(
-  //         NFT_CONTRACT_ADDRESS,
-  //         NFT_CONTRACT_ABI,
-  //         signer
-  //       );
-  //      nftContract.aproove(msg.sender,_user,tokenId,_request)
+  async function approveScript(doc_id) {
+    const contractAddress = "0x242Bfe278bdE88881d5A8feaB20Ea62F31b535c4";
+    console.log(
+      "wss://polygon-mumbai.g.alchemy.com/v2/zurJTrfSEQoqjKepEzLZvqqDUT87wIg_"
+    );
+    const provider = new ethers.providers.WebSocketProvider(
+      "wss://polygon-mumbai.g.alchemy.com/v2/zurJTrfSEQoqjKepEzLZvqqDUT87wIg_"
+    );
+    const contract = new ethers.Contract(
+      contractAddress,
+      contractabi,
+      provider
+    );
+    contract.on("_aproove", async (from, to, tokenId, event) => {
+      console.log("Inside _aproove");
+      await axios.put(`/api/ClaimWarranty/update`, { _id: doc_id });
+      console.log("Updated in db");
+    });
+  }
 
-  //     }
+  const handleApprove = async (userId, doc_id, msg, tokenId) => {
+    console.log(doc_id);
+    console.log(userId);
+    console.log(msg);
+    console.log(tokenId);
 
-  //   }
+    try {
+      const signer = await getProviderOrSigner(true);
+      const nftContract = new Contract(
+        NFT_CONTRACT_ADDRESS,
+        NFT_CONTRACT_ABI,
+        signer
+      );
+      const address = await signer.getAddress();
+      console.log(address);
+      console.log("tx approve sending..");
+
+      const tx = await nftContract.aproove(
+        utils.getAddress(userId),
+        utils.getAddress(address),
+        BigNumber.from(tokenId),
+        msg
+      );
+      approveScript(doc_id);
+      await tx.wait();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleReject = async (e) => {
+    const doc_id = e.target.value;
+    console.log(doc_id);
+
+    try {
+      await axios.delete(`/api/ClaimWarranty/delete`, {
+        data: { docId: doc_id },
+      });
+      window.alert(`Request rejected reload to see changes`);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const each = (approval) => {
     return (
-      <div
-        style={{
-          margin: "20px",
-          border: "2px solid black",
-          padding: "10px",
-        }}
-      >
-        <h2>{approval.from}</h2>
-        <h2>{approval.msg}</h2>
-        <h2>{approval.tokenId}</h2>
-        <h2>{approval._id}</h2>
-        <button>{Approve}</button>
+      <div className={styles.card}>
+        <h4 className={styles.headings}>
+          <h4 className={styles.mainHead}>User Id </h4>
+          {approval.from}
+        </h4>
+        <h4 className={styles.headings}>
+          <h4 className={styles.mainHead}>Message </h4>
+          {approval.msg}
+        </h4>
+        <h4 className={styles.headings}>
+          <h4 className={styles.mainHead}>Token Id </h4>
+          {approval.tokenId}
+        </h4>
+        <h4 className={styles.headings}>
+          <h4 className={styles.mainHead}>Document Id </h4>
+          {approval._id}
+        </h4>
+
+        <button
+          className={styles.loginButtonTwo}
+          value={approval._id}
+          onClick={() => {
+            handleApprove(
+              approval.from,
+              approval._id,
+              approval.msg,
+              approval.tokenId
+            );
+          }}
+        >
+          Approve
+        </button>
+        <button
+          className={styles.loginButtonTwo}
+          value={approval._id}
+          onClick={handleReject}
+        >
+          Reject
+        </button>
       </div>
     );
   };
@@ -121,10 +199,15 @@ const Approve = () => {
   //   };
 
   return (
-    <div>
-      <button onClick={handleFetch}>see</button>
-      {status ? approveArray.map(each) : ""}
-    </div>
+    <>
+      <NavBar />
+      <div className={styles.login}>
+        <button onClick={handleFetch} className={styles.loginButton}>
+          See
+        </button>
+        {status ? approveArray.map(each) : ""}
+      </div>
+    </>
   );
 };
 

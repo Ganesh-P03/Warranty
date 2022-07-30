@@ -1,29 +1,33 @@
 .login {
-  height: 100%;
+  height: 220vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+
   background-size: cover;
-  background-color: #000;
+  background: linear-gradient(267.45deg, #05d5ff -34.23%, #53f 99.39%);
 }
 
 .loginTitle {
-  font-size: 100px;
-  color: #faeded;
+  font-size: 70px;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  color: white;
 }
 
 .label {
-  color: #faeded;
+  color: white;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .textarea {
-  background-color: #faeded;
+  background-color: white;
+  font-size: 19px;
 }
 
 .loginImg {
   width: 300px;
   height: 200px;
+  border: 2px solid white;
+  border-radius: 10px;
 }
 
 .loginForm {
@@ -38,34 +42,37 @@
 
 .loginInput {
   padding: 10px;
-  background-color: #faeded;
+  background-color: white;
   border: 1px solid;
   border-radius: 10px;
+  font-size: 15px;
 }
 
 .loginButton {
   margin-top: 20px;
-  background-color: #faeded;
+  background: white;
   cursor: pointer;
   border: none;
   border-radius: 10px;
-  color: #000;
+  color: blue;
   padding: 10px;
+  font-size: large;
 }
 
 .loginhone {
   font-size: 100px;
-  color: #faeded;
+  color: white;
 }
 
 .loginhhtwo {
   font-size: 50px;
-  color: #faeded;
+  color: white;
+  margin-bottom: 20px;
 }
 
 .loginpone {
   font-size: 40px;
-  color: #faeded;
+  color: white;
 }
 
 .loginButton:disabled {
@@ -105,26 +112,26 @@
 
 .rightcolumn h2 {
   font-size: 40px;
-  color: #faeded;
+  color: white;
 }
 
 .rightcolumn p {
   font-size: 30px;
-  color: #faeded;
+  color: white;
 }
 
 .tablea {
-  background-color: #faeded;
-  border: 1px solid black;
+  background-color: hitew;
+  border: 1px solid blue;
   width: 100%;
 }
 .tra {
-  border: 1px solid black;
-  color: black;
+  border: 1px solid blue;
+  color: blue;
 }
 .tda {
-  border: 1px solid black;
-  color: black;
+  border: 1px solid blue;
+  color: blue;
 }
 
 .text {
@@ -139,7 +146,6 @@
   width: 100%;
   position: relative;
   left: 0;
-  background-color: black;
 }
 
 /* Control the right side */
@@ -149,9 +155,8 @@
   height: 30%;
   width: 100%;
   position: relative;
-  color: #faeded;
+  color: white;
   right: 0;
-  background-color: black;
 }
 
 /* If you want the content centered horizontally and vertically */
@@ -166,6 +171,34 @@
   width: 400px;
   height: 400px;
   object-fit: fill;
+}
+.card {
+  padding: 10px;
+  margin: 10px;
+  border: 2px solid blue;
+  border-radius: 20px;
+  background-color: white;
+  font-style: italic;
+}
+
+.headings {
+  font-family: "Varela-Round", sans-serif;
+  color: blue;
+}
+.mainHead {
+  font-weight: bolder;
+  color: blue;
+  margin: 10px;
+}
+
+.loginButtonTwo {
+  margin-top: 20px;
+  background-color: white;
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+  color: blue;
+  padding: 10px;
 }
 
 @media screen and (max-width: 480px) {

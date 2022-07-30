@@ -4,7 +4,7 @@ require("dotenv").config({ path: ".env" });
 const axios = require("axios");
 
 async function main() {
-  const contractAddress = "0x1D22cb77DAAB545e2a7c652Dd85a695d38CEff52";
+  const contractAddress = "0x242Bfe278bdE88881d5A8feaB20Ea62F31b535c4";
   console.log(
     "wss://polygon-mumbai.g.alchemy.com/v2/zurJTrfSEQoqjKepEzLZvqqDUT87wIg_"
   );

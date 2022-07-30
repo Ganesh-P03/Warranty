@@ -1,5 +1,5 @@
 export const NFT_CONTRACT_ADDRESS =
-  "0x1D22cb77DAAB545e2a7c652Dd85a695d38CEff52";
+  "0x242Bfe278bdE88881d5A8feaB20Ea62F31b535c4";
 
 export const NFT_CONTRACT_ABI = [
   {
@@ -251,6 +251,19 @@ export const NFT_CONTRACT_ABI = [
         internalType: "uint256",
         name: "",
         type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "baseTokenURI",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
       },
     ],
     stateMutability: "view",
