@@ -115,11 +115,6 @@
 
 .leftcolumn img {
   width: 100%;
-  position: absolute;
-  left: 0;
-  top: 0;
-  opacity: 0;
-  transition: all 0.3s ease;
 }
 
 .leftcolumn img.active {
@@ -170,7 +165,7 @@
   position: relative;
   height: 2%;
   width: 100%;
-  color: white;
+
   right: -15%;
 }
 

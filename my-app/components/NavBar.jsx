@@ -33,6 +33,11 @@ const NavBar = () => {
                 APPROVED
               </Link>
             </li>
+            <li className={styles.topListItem}>
+              <Link className={styles.link} href="/approve">
+                APPROVE/REJECT
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

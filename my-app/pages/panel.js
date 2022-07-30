@@ -31,6 +31,7 @@ const Panel = () => {
   const [txnHashes, setTxnHashes] = useState(null);
   const [txnFrom, setTxnFrom] = useState(null);
   const [txnTo, setTxnTo] = useState(null);
+
   const onPageLoad = async () => {
     await connectWallet();
     //main();
@@ -213,44 +214,54 @@ const Panel = () => {
   const renderBody = () => {
     if (status)
       return (
-        <div
-          style={{
-            marginTop: "80px",
-            backgroundColor: "white",
-            borderRadius: "20px",
-            marginLeft: "100px",
-            marginRight: "100px",
-            color: "black",
-          }}
-        >
-          <div>
+        <div>
+          <div
+            style={{
+              marginTop: "80px",
+              backgroundColor: "white",
+              borderRadius: "20px",
+              marginLeft: "100px",
+              marginRight: "100px",
+              color: "black",
+            }}
+          >
             <h1 style={{ textAlign: "center" }}>{product.name}</h1>
-          </div>
-          <div className={styles.container}>
-            <div className={styles.left}>
-              <div className={styles.centered}>
-                {/* <Image src={product.url} alt={product.url} /> */}
-                <img src={product.url} alt={product.url} />
-              </div>
-            </div>
-            <div className={styles.right}>
-              <div className={styles.centered} style={{ color: "black" }}>
-                <h2>Product Id : {product.productId}</h2>
-                <h2>Serial No: {product.sNo}</h2>
-                <h2> Product Description:</h2>
-                <p>{product.description}</p>
-              </div>
-            </div>
-          </div>
 
-          <table className={styles.tablea}>
-            <tr className={styles.tra}>
-              <td className={styles.tda}>Transaction Hash </td>
-              <td className={styles.tda}>From Address</td>
-              <td className={styles.tda}>To Address</td>
-            </tr>
-            {txnHashes.map(renderEachTransaction)}
-          </table>
+            <div className={styles.container}>
+              <div className={styles.left}>
+                <div className={styles.centered}>
+                  {/* <Image src={product.url} alt={product.url} /> */}
+                  <img src={product.url} alt={product.url} />
+                </div>
+              </div>
+              <div className={styles.right}>
+                <div className={styles.centered} style={{ color: "black" }}>
+                  <h2>Product Id : {product.productId}</h2>
+                  <h2>Serial No: {product.sNo}</h2>
+                  <h2> Product Description:</h2>
+                  <p>{product.description}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style={{
+              marginTop: "80px",
+              backgroundColor: "white",
+
+              marginLeft: "100px",
+              marginRight: "100px",
+            }}
+          >
+            <table className={styles.tablea}>
+              <tr className={styles.tra}>
+                <td className={styles.tda}>Transaction Hash </td>
+                <td className={styles.tda}>From Address</td>
+                <td className={styles.tda}>To Address</td>
+              </tr>
+              {txnHashes.map(renderEachTransaction)}
+            </table>
+          </div>
         </div>
       );
   };

@@ -9,7 +9,17 @@ const Approved = () => {
   const each = (claim) => {
     return (
       <div
-        style={{ border: "2px solid black", margin: "10px", padding: "5px" }}
+        style={{
+          backgroundColor: "white",
+          borderRadius: "20px",
+          marginTop: "30px",
+          marginLeft: "150px",
+          marginRight: "150px",
+          color: "black",
+          padding: "10px",
+          display: "inline - block",
+          marginBottom: "30px",
+        }}
       >
         <h2>Repair Details: {claim.msg}</h2>
         <h2>UserId : {claim.from}</h2>

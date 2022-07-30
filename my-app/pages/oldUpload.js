@@ -119,25 +119,31 @@ const OldUpload = () => {
     console.log(status);
     if (status) {
       return (
-        <>
+        <div
+          style={{
+            marginTop: "80px",
+            backgroundColor: "white",
+            borderRadius: "20px",
+            padding: "10px",
+
+            color: "black",
+          }}
+        >
           <div className={styles.text}>
-            <h1 className={styles.loginhone}>{product.name}</h1>
+            <h1 style={{ color: "black" }}>{product.name}</h1>
           </div>
           <div className={styles.container}>
-            <div className={styles.left}>
-              <div className={styles.centered}>
-                <img src={product.url} height="200px" width="100px"></img>
-              </div>
+            <div className={styles.centered}>
+              <img src={product.url}></img>
             </div>
-            <div className={styles.right}>
-              <div className={styles.centered}>
-                <h2>Product Id : {pId}</h2>
-                <h2> Product Description:</h2>
-                <p>{product.description}</p>
-              </div>
+
+            <div className={styles.centered} style={{ marginLeft: "30px" }}>
+              <h2>Product Id : {pId}</h2>
+              <h2> Product Description:</h2>
+              <p>{product.description}</p>
             </div>
           </div>
-        </>
+        </div>
       );
     }
   };
