@@ -1,0 +1,186 @@
+.login {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-color: #000;
+}
+
+.loginTitle {
+  font-size: 100px;
+  color: #faeded;
+}
+
+.label {
+  color: #faeded;
+}
+
+.textarea {
+  background-color: #faeded;
+}
+
+.loginImg {
+  width: 300px;
+  height: 200px;
+}
+
+.loginForm {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.loginForm > label {
+  margin: 10px 0;
+}
+
+.loginInput {
+  padding: 10px;
+  background-color: #faeded;
+  border: 1px solid;
+  border-radius: 10px;
+}
+
+.loginButton {
+  margin-top: 20px;
+  background-color: #faeded;
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+  color: #000;
+  padding: 10px;
+}
+
+.loginhone {
+  font-size: 100px;
+  color: #faeded;
+}
+
+.loginhhtwo {
+  font-size: 50px;
+  color: #faeded;
+}
+
+.loginpone {
+  font-size: 40px;
+  color: #faeded;
+}
+
+.loginButton:disabled {
+  cursor: not-allowed;
+  background-color: lightcoral;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 15px;
+  display: flex;
+}
+
+.leftcolumn {
+  width: 65%;
+  position: relative;
+}
+
+.rightcolumn {
+  width: 35%;
+  margin-top: 60px;
+}
+
+.leftcolumn img {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.leftcolumn img.active {
+  opacity: 1;
+}
+
+.rightcolumn h2 {
+  font-size: 40px;
+  color: #faeded;
+}
+
+.rightcolumn p {
+  font-size: 30px;
+  color: #faeded;
+}
+
+.tablea {
+  background-color: #faeded;
+  border: 1px solid black;
+  width: 100%;
+}
+.tra {
+  border: 1px solid black;
+  color: black;
+}
+.tda {
+  border: 1px solid black;
+  color: black;
+}
+
+.text {
+  text-align: center;
+}
+
+/* Control the left side */
+.left {
+  height: 40%;
+  width: 100%;
+  position: relative;
+  width: 100%;
+  position: relative;
+  left: 0;
+  background-color: black;
+}
+
+/* Control the right side */
+.right {
+  position: relative;
+  padding-top: 20px;
+  height: 30%;
+  width: 100%;
+  position: relative;
+  color: #faeded;
+  right: 0;
+  background-color: black;
+}
+
+/* If you want the content centered horizontally and vertically */
+.centered {
+  position: relative;
+  top: 60%;
+  left: 0%;
+}
+
+/* Style the image inside the centered container, if needed */
+.centered img {
+  width: 400px;
+  height: 400px;
+  object-fit: fill;
+}
+
+@media screen and (max-width: 480px) {
+  .login {
+    width: 100%;
+    height: 100%; /* The width is 100%, when the viewport is 800px or smaller */
+  }
+  .loginButton,
+  .loginButton:disabled,
+  .loginForm,
+  .loginTitle,
+  .loginInput,
+  .textarea {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+}
