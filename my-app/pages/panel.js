@@ -66,7 +66,7 @@ const Panel = () => {
         msg: event,
       };
       console.log(JSON.stringify(info, null, 4));
-      await axios.post(`http://localhost:3000/api/ClaimWarranty/create`, info);
+      await axios.post(`/api/ClaimWarranty/create`, info);
       console.log("added to DB");
     });
     console.log("hello");
