@@ -287,9 +287,17 @@ const Panel = () => {
     await transfer(signer);
     let curproduct = await axios.get(`/api/${tokenId}`);
     let product = curproduct.data;
-    let time = Number(product.warrantyTime) * 1000;
+    console.log(product);
+
+    let time = parseInt(product.attributes[1].value) * 1000;
+    console.log("check");
+    console.log(time);
+    console.log(new Date().toLocaleString());
 
     setTimeout(() => {
+      console.log("check");
+      console.log(time);
+      console.log(new Date().toLocaleString());
       console.log(signer);
 
       burn(signer);

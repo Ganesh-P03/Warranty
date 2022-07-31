@@ -23,6 +23,10 @@ export default async function handler(req, res) {
           trait_type: "Color",
           value: curItem[0].pAttr,
         },
+        {
+          trait_type: "Warranty time",
+          value: curItem[0].warrantyTime,
+        },
       ],
     });
   } catch (err) {

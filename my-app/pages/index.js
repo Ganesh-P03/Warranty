@@ -10,6 +10,7 @@ import {
   RETAILER_CONTRACT_ADDRESS,
   RETAILER_CONTRACT_ABI,
 } from "../constants/retailers";
+import Nav from "../components/Nav";
 
 const Home = () => {
   const [walletConnected, setWalletConnected] = useState(false);
@@ -142,6 +143,8 @@ const Home = () => {
         <title>Grid 4.0 team phoniex</title>
         <meta name="description" content="grid 4.0" />
       </Head>
+
+      <Nav />
 
       <div className={styles.logini}>{renderButton()}</div>
 
