@@ -6,6 +6,7 @@ const Approved = () => {
   const [claimed, setClaimed] = useState([]);
   const [tokenId, setTokenId] = useState(null);
   const [status, setStatus] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const each = (claim) => {
     return (
@@ -30,31 +31,63 @@ const Approved = () => {
   };
 
   const handleSubmit = async () => {
-    const cur_claimed = await axios.get(
-      `/api/ClaimWarranty/Approved/${tokenId}`
-    );
-    setClaimed(cur_claimed.data.txn);
-    if (claimed.length != 0) {
-      setStatus(true);
-    } else {
-      setStatus(false);
+    try {
+      setLoading(true);
+      const cur_claimed = await axios.get(
+        `/api/ClaimWarranty/Approved/${tokenId}`
+      );
+      setClaimed(cur_claimed.data.txn);
+      if (cur_claimed.data.txn.length != 0) {
+        setStatus(true);
+      } else {
+        setStatus(false);
+      }
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      console.log(err);
     }
   };
   return (
-    <div className={styles.center}>
-      <NavBar />
-      <h1>Approved claims</h1>
+    <>
+      {loading ? (
+        <div>Please Wait while we are processing...⏳</div>
+      ) : (
+        <div className={styles.center}>
+          <NavBar />
+          <div
+            style={{
+              margin: "20px",
 
-      <input
-        type="text"
-        onChange={(e) => {
-          setTokenId(e.target.value);
-        }}
-      />
-      <button onClick={handleSubmit}>Submit</button>
+              textAlign: "center",
+            }}
+          >
+            <h1>Approved Claims</h1>
+            <div
+              style={{ display: "grid", width: "70%", margin: "0px auto 20px" }}
+            >
+              <input
+                type="text"
+                className={styles.loginInput}
+                style={{ width: "40%", margin: "0px auto 20px" }}
+                onChange={(e) => {
+                  setTokenId(e.target.value);
+                }}
+              />
+              <button
+                className={styles.loginButton}
+                style={{ width: "40%", margin: "0px auto 20px" }}
+                onClick={handleSubmit}
+              >
+                Submit
+              </button>
 
-      {status ? claimed.map(each) : <h1>No claims found 🙂</h1>}
-    </div>
+              {status ? claimed.map(each) : ""}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

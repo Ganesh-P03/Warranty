@@ -24,6 +24,7 @@ const Approve = () => {
   const [approveArray, setApproveArray] = useState();
   const [status, setStatus] = useState(false);
   const web3ModalRef = useRef();
+  const [loading, setLoading] = useState(false);
   const connectWallet = async () => {
     try {
       await getProviderOrSigner();
@@ -113,6 +114,7 @@ const Approve = () => {
     console.log(tokenId);
 
     try {
+      setLoading(true);
       const signer = await getProviderOrSigner(true);
       const nftContract = new Contract(
         NFT_CONTRACT_ADDRESS,
@@ -131,7 +133,9 @@ const Approve = () => {
       );
       approveScript(doc_id);
       await tx.wait();
+      setLoading(false);
     } catch (err) {
+      setLoading(false);
       console.error(err);
     }
   };
@@ -153,7 +157,15 @@ const Approve = () => {
 
   const each = (approval) => {
     return (
-      <div className={styles.card}>
+      <div
+        style={{
+          marginTop: "80px",
+          backgroundColor: "white",
+          borderRadius: "20px",
+          padding: "20px",
+          color: "black",
+        }}
+      >
         <h4 className={styles.headings}>
           <h4 className={styles.mainHead}>User Id </h4>
           {approval.from}
@@ -170,28 +182,45 @@ const Approve = () => {
           <h4 className={styles.mainHead}>Document Id </h4>
           {approval._id}
         </h4>
-
-        <button
-          className={styles.loginButtonTwo}
-          value={approval._id}
-          onClick={() => {
-            handleApprove(
-              approval.from,
-              approval._id,
-              approval.msg,
-              approval.tokenId
-            );
-          }}
-        >
-          Approve
-        </button>
-        <button
-          className={styles.loginButtonTwo}
-          value={approval._id}
-          onClick={handleReject}
-        >
-          Reject
-        </button>
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <button
+            style={{
+              margin: "20px",
+              padding: "10px",
+              borderRadius: "10px",
+              backgroundColor: "black",
+              fontSize: "16px",
+              color: "white",
+              cursor: "pointer",
+            }}
+            value={approval._id}
+            onClick={() => {
+              handleApprove(
+                approval.from,
+                approval._id,
+                approval.msg,
+                approval.tokenId
+              );
+            }}
+          >
+            Approve
+          </button>
+          <button
+            style={{
+              margin: "20px",
+              padding: "10px",
+              borderRadius: "10px",
+              backgroundColor: "black",
+              fontSize: "16px",
+              color: "white",
+              cursor: "pointer",
+            }}
+            value={approval._id}
+            onClick={handleReject}
+          >
+            Reject
+          </button>
+        </div>
       </div>
     );
   };
@@ -202,13 +231,22 @@ const Approve = () => {
 
   return (
     <>
-      <NavBar />
-      <div className={styles.login}>
-        <button onClick={handleFetch} className={styles.loginButton}>
-          See
-        </button>
-        {status ? approveArray.map(each) : ""}
-      </div>
+      {loading ? (
+        <div>Please Wait while we are processing...⏳</div>
+      ) : (
+        <div>
+          <NavBar />
+          <div
+            className={styles.login}
+            style={{ width: "70%", margin: "0px auto 20px" }}
+          >
+            <button onClick={handleFetch} className={styles.loginButton}>
+              See
+            </button>
+            {status ? approveArray.map(each) : ""}
+          </div>
+        </div>
+      )}
     </>
   );
 };

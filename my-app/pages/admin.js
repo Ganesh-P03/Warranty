@@ -11,6 +11,7 @@ const Admin = () => {
   const [repairerAddress, setRepairerAddress] = useState();
   const web3ModalRef = useRef();
   const [walletConnected, setWalletConnected] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (window.ethereum) {
@@ -86,6 +87,7 @@ const Admin = () => {
   );
   const handleClick = async () => {
     try {
+      setLoading(true);
       const signer = await getProviderOrSigner(true);
 
       const nftContract = new Contract(
@@ -98,61 +100,88 @@ const Admin = () => {
         utils.getAddress(repairerAddress)
       );
       await tx.wait();
+      window.alert("sucesfully added repairer");
+      setLoading(false);
     } catch (err) {
+      setLoading(false);
       console.log(err);
     }
   };
   return (
-    <div>
-      <NavBar />
-      <div className={styles.top} style={{ paddingTop: "30px" }}>
-        <h1
-          className={styles.topListItem}
-          style={{ fontFamily: "helvatica sans-serif" }}
-        >
-          Welcome
-        </h1>
-        <h2 style={{ textAlign: "center", fontFamily: "helvatica sans-serif" }}>
-          {data} <Emoji symbol="" />
-        </h2>
-      </div>
-      <div className={styles.body}>
-        <Link href="/newUpload">
-          <button
-            type="button"
-            className={styles.gloww}
-            style={{ margin: "20px", fontSize: "16px" }}
+    <>
+      {loading ? (
+        <div>Please Wait while we are processing...⏳</div>
+      ) : (
+        <div>
+          <NavBar />
+          <div style={{ paddingTop: "30px" }}>
+            <h1
+              className={styles.topListItem}
+              style={{ fontFamily: "helvatica sans-serif" }}
+            >
+              Welcome
+            </h1>
+            <h2
+              style={{
+                textAlign: "center",
+                fontFamily: "helvatica sans-serif",
+              }}
+            >
+              {data} <Emoji symbol="" />
+            </h2>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-evenly",
+              marginTop: "100px",
+            }}
           >
-            {" "}
-            New Product
-          </button>
-        </Link>
-        <Link href="/oldUpload">
-          <button
-            type="button"
-            className={styles.gloww}
-            style={{ margin: "20px", fontSize: "16px" }}
-          >
-            Old Product{" "}
-          </button>
-        </Link>
-        <input
-          type="text"
-          className={styles.gloww}
-          onChange={(e) => {
-            setRepairerAddress(e.target.value);
-          }}
-        />
-        <button
-          type="button"
-          className={styles.gloww}
-          style={{ margin: "20px", fontSize: "16px" }}
-          onClick={handleClick}
-        >
-          Make Repairer{" "}
-        </button>
-      </div>
-    </div>
+            <div style={{ display: "grid" }}>
+              <input
+                type="text"
+                className={styles.loginInput}
+                style={{ margin: "20px", fontSize: "16px" }}
+                placeholder="Enter address"
+                onChange={(e) => {
+                  setRepairerAddress(e.target.value);
+                }}
+              />
+              <button
+                type="button"
+                className={styles.gloww}
+                style={{ margin: "20px", fontSize: "16px" }}
+                onClick={handleClick}
+              >
+                Make Repairer{" "}
+              </button>
+            </div>
+            <div style={{ display: "grid" }}>
+              <Link href="/newUpload">
+                <button
+                  type="button"
+                  className={styles.gloww}
+                  style={{ margin: "20px", fontSize: "16px" }}
+                >
+                  {" "}
+                  New Product
+                </button>
+              </Link>
+              <Link href="/oldUpload">
+                <button
+                  type="button"
+                  className={styles.gloww}
+                  style={{ margin: "20px", fontSize: "16px" }}
+                >
+                  Old Product{" "}
+                </button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
