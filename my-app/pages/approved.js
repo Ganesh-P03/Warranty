@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useRef, useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
+import styles from "./../styles/approved.module.css";
 const Approved = () => {
   const [claimed, setClaimed] = useState([]);
   const [tokenId, setTokenId] = useState(null);
@@ -40,7 +41,7 @@ const Approved = () => {
     }
   };
   return (
-    <>
+    <div className={styles.center}>
       <NavBar />
       <h1>Approved claims</h1>
 
@@ -53,7 +54,7 @@ const Approved = () => {
       <button onClick={handleSubmit}>Submit</button>
 
       {status ? claimed.map(each) : <h1>No claims found 🙂</h1>}
-    </>
+    </div>
   );
 };
 

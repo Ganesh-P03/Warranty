@@ -72,9 +72,10 @@ const Panel = () => {
 
       console.log(count);
       count++;
-      axios.post(`/api/ClaimWarranty/create`, info);
+      axios.post(`/api/ClaimWarranty/create`, info).then(() => {
+        window.location.reload();
+      });
       console.log("added to DB");
-      window.location.reload();
     });
 
     console.log("hello");

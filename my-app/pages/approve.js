@@ -98,10 +98,11 @@ const Approve = () => {
       contractabi,
       provider
     );
-    contract.on("_aproove", async (from, to, tokenId, event) => {
+    contract.on("_aproove", (from, to, tokenId, event) => {
       console.log("Inside _aproove");
-      await axios.put(`/api/ClaimWarranty/update`, { _id: doc_id });
-      console.log("Updated in db");
+      axios.put(`/api/ClaimWarranty/update`, { _id: doc_id }).then(() => {
+        window.location.reload();
+      });
     });
   }
 
@@ -143,7 +144,8 @@ const Approve = () => {
       await axios.delete(`/api/ClaimWarranty/delete`, {
         data: { docId: doc_id },
       });
-      window.alert(`Request rejected reload to see changes`);
+      window.alert(`Request rejected`);
+      window.location.reload();
     } catch (err) {
       console.log(err);
     }
