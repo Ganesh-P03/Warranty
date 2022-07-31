@@ -12,6 +12,7 @@ export default async function createProduct(req, res) {
 
     const txn = await ClaimWarranty.findOneAndDelete({
       _id: curDocId,
+      status: "pending",
     });
     console.log("FOUND AND DELETED DOCUMENT");
     console.log(txn);

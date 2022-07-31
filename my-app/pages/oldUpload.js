@@ -109,7 +109,7 @@ const OldUpload = () => {
   };
 
   const handleInfo = async () => {
-    let Product = await axios.get(`http://localhost:3000/api/Detection/${pId}`);
+    let Product = await axios.get(`/api/Detection/${pId}`);
     console.log(Product.data);
     setProduct(Product.data);
     setStatus(true);

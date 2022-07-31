@@ -31,6 +31,7 @@ const Panel = () => {
   const [txnHashes, setTxnHashes] = useState(null);
   const [txnFrom, setTxnFrom] = useState(null);
   const [txnTo, setTxnTo] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const onPageLoad = async () => {
     await connectWallet();
@@ -58,17 +59,24 @@ const Panel = () => {
       contractabi,
       provider
     );
-    contract.on("_req", async (from, to, tokenId, event) => {
-      let info = {
+    let count = 0;
+    let info;
+    contract.on("_req", (from, to, tokenId, event) => {
+      info = {
         from: from,
         repairId: to,
         tokenId: ethers.BigNumber.from(tokenId).toString(),
         msg: event,
       };
       console.log(JSON.stringify(info, null, 4));
-      await axios.post(`/api/ClaimWarranty/create`, info);
+
+      console.log(count);
+      count++;
+      axios.post(`/api/ClaimWarranty/create`, info);
       console.log("added to DB");
+      window.location.reload();
     });
+
     console.log("hello");
   }
 
@@ -292,6 +300,7 @@ const Panel = () => {
     console.log(tokenId);
 
     try {
+      setLoading(true);
       const signer = await getProviderOrSigner(true);
       const nftContract = new Contract(
         NFT_CONTRACT_ADDRESS,
@@ -310,88 +319,102 @@ const Panel = () => {
       );
       requestListener();
       await tx.wait();
+      setLoading(false);
     } catch (err) {
+      setLoading(false);
       console.error(err);
     }
   };
   return (
     <>
-      <NavBar />
-      <div>
-        <div>
-          <div style={{ width: "400px", margin: "20px auto" }}>
-            <div style={{ display: "grid" }}>
-              <div className={styles.loginhhtwo}>Token Id Please</div>
-              <input
-                className={styles.loginInput}
-                type="text"
-                onChange={(e) => {
-                  setTokenId(e.target.value);
-                }}
-              />
-              <button className={styles.loginButton} onClick={handleSubmit}>
-                Submit
-              </button>
-            </div>
-          </div>
-          {renderBody()}
+      {loading ? (
+        <div>Please Wait while we are processing...⏳</div>
+      ) : (
+        <>
+          <NavBar />
+          <div>
+            <div>
+              <div style={{ width: "400px", margin: "20px auto" }}>
+                <div style={{ display: "grid" }}>
+                  <div className={styles.loginhhtwo}>Token Id Please</div>
+                  <input
+                    className={styles.loginInput}
+                    type="text"
+                    onChange={(e) => {
+                      setTokenId(e.target.value);
+                    }}
+                  />
+                  <button className={styles.loginButton} onClick={handleSubmit}>
+                    Submit
+                  </button>
+                </div>
+              </div>
+              {renderBody()}
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-evenly",
-              marginTop: "100px",
-              marginBottom: "50px",
-              height: "100%",
-            }}
-          >
-            <div style={{ display: "grid" }}>
-              <div className={styles.loginhhtwo}>Address to deliver</div>
-              <input
-                className={styles.loginInput}
-                placeholder="address to deliver"
-                type="text"
-                onChange={(e) => {
-                  to.current = e.target.value;
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-evenly",
+                  marginTop: "100px",
+                  marginBottom: "50px",
+                  height: "100%",
                 }}
-              />
-              <button className={styles.loginButton} onClick={handleTransfer}>
-                Transfer
-              </button>
-              <button
-                className={styles.loginButton}
-                onClick={handleTransferWithWarranty}
               >
-                Transfer with warranty enabled
-              </button>
-            </div>
+                <div style={{ display: "grid" }}>
+                  <div className={styles.loginhhtwo}>Address to deliver</div>
+                  <input
+                    className={styles.loginInput}
+                    placeholder="address to deliver"
+                    type="text"
+                    onChange={(e) => {
+                      to.current = e.target.value;
+                    }}
+                  />
+                  <button
+                    className={styles.loginButton}
+                    onClick={handleTransfer}
+                  >
+                    Transfer
+                  </button>
+                  <button
+                    className={styles.loginButton}
+                    onClick={handleTransferWithWarranty}
+                  >
+                    Transfer with warranty enabled
+                  </button>
+                </div>
 
-            <div style={{ display: "grid" }}>
-              <label className={styles.loginhhtwo}>Claim Warranty</label>
-              <input
-                type="text"
-                placeholder="Message"
-                className={styles.loginInput}
-                onChange={(e) => {
-                  setreqMessage(e.target.value);
-                }}
-              />
-              <input
-                type="text"
-                placeholder="Repairer address"
-                className={styles.loginInput}
-                style={{ marginTop: "20px" }}
-                onChange={(e) => {
-                  setrepairAddress(e.target.value);
-                }}
-              />
-              <button className={styles.loginButton} onClick={handleRequest}>
-                Request
-              </button>
+                <div style={{ display: "grid" }}>
+                  <label className={styles.loginhhtwo}>Claim Warranty</label>
+                  <input
+                    type="text"
+                    placeholder="Message"
+                    className={styles.loginInput}
+                    onChange={(e) => {
+                      setreqMessage(e.target.value);
+                    }}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Repairer address"
+                    className={styles.loginInput}
+                    style={{ marginTop: "20px" }}
+                    onChange={(e) => {
+                      setrepairAddress(e.target.value);
+                    }}
+                  />
+                  <button
+                    className={styles.loginButton}
+                    onClick={handleRequest}
+                  >
+                    Request
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </>
   );
 };
